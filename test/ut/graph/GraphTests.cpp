@@ -256,3 +256,78 @@ TEST(GraphTest, getAdjacencyListForDirectedGraph)
     std::list<std::pair<int, int>> listOfV4{};
     EXPECT_EQ(listOfV4, adjList[v4]);
 }
+
+
+TEST(GraphTest, getEgressEdgesOnDirectedGraph)
+{
+    alg::graph::Graph g{alg::graph::GraphType::Directed};
+    auto v0 = g.addVertex();
+    auto v1 = g.addVertex();
+    auto v2 = g.addVertex();
+    auto v3 = g.addVertex();
+    auto v4 = g.addVertex();
+    g.addEdge(v0, v1, 1);
+    g.addEdge(v0, v4, 2);
+    g.addEdge(v1, v4, 3);
+    g.addEdge(v1, v3, 4);
+    g.addEdge(v1, v2, 5);
+    g.addEdge(v3, v4, 6);
+    g.addEdge(v2, v3, 7);
+
+    auto egressEdgesFromV0 = g.getEgressEdges(v0);
+    std::vector<alg::graph::Edge> expectedEdgesOf0{{v0, v1, 1}, {v0, v4, 2}};
+    EXPECT_EQ(expectedEdgesOf0, egressEdgesFromV0);
+
+    auto egressEdgesFromV1 = g.getEgressEdges(v1);
+    std::vector<alg::graph::Edge> expectedEdgesOf1{{v1, v4, 3}, {v1, v3, 4},{v1, v2, 5}};
+    EXPECT_EQ(expectedEdgesOf1, egressEdgesFromV1);
+
+    auto egressEdgesFromV2 = g.getEgressEdges(v2);
+    std::vector<alg::graph::Edge> expectedEdgesOf2{{v2, v3, 7}};
+    EXPECT_EQ(expectedEdgesOf2, egressEdgesFromV2);
+
+    auto egressEdgesFromV3 = g.getEgressEdges(v3);
+    std::vector<alg::graph::Edge> expectedEdgesOf3{{v3, v4, 6}};
+    EXPECT_EQ(expectedEdgesOf3, egressEdgesFromV3);
+
+    auto egressEdgesFromV4 = g.getEgressEdges(v4);
+    std::vector<alg::graph::Edge> expectedEdgesOf4{};
+    EXPECT_EQ(expectedEdgesOf4, egressEdgesFromV4);
+}
+
+TEST(GraphTest, getEgressEdgesOnUndirectedGraph)
+{
+    alg::graph::Graph g{alg::graph::GraphType::Undirected};
+    auto v0 = g.addVertex();
+    auto v1 = g.addVertex();
+    auto v2 = g.addVertex();
+    auto v3 = g.addVertex();
+    auto v4 = g.addVertex();
+    g.addEdge(v0, v1, 1);
+    g.addEdge(v0, v4, 2);
+    g.addEdge(v1, v4, 3);
+    g.addEdge(v1, v3, 4);
+    g.addEdge(v1, v2, 5);
+    g.addEdge(v3, v4, 6);
+    g.addEdge(v2, v3, 7);
+
+    auto egressEdgesFromV0 = g.getEgressEdges(v0);
+    std::vector<alg::graph::Edge> expectedEdgesOf0{{v0, v1, 1}, {v0, v4, 2}};
+    EXPECT_EQ(expectedEdgesOf0, egressEdgesFromV0);
+
+    auto egressEdgesFromV1 = g.getEgressEdges(v1);
+    std::vector<alg::graph::Edge> expectedEdgesOf1{{v1, v0, 1}, {v1, v4, 3}, {v1, v3, 4}, {v1, v2, 5}};
+    EXPECT_EQ(expectedEdgesOf1, egressEdgesFromV1);
+
+    auto egressEdgesFromV2 = g.getEgressEdges(v2);
+    std::vector<alg::graph::Edge> expectedEdgesOf2{{v2, v1, 5}, {v2, v3, 7}};
+    EXPECT_EQ(expectedEdgesOf2, egressEdgesFromV2);
+
+    auto egressEdgesFromV3 = g.getEgressEdges(v3);
+    std::vector<alg::graph::Edge> expectedEdgesOf3{{v3, v1, 4}, {v3, v4, 6}, {v3, v2, 7}};
+    EXPECT_EQ(expectedEdgesOf3, egressEdgesFromV3);
+
+    auto egressEdgesFromV4 = g.getEgressEdges(v4);
+    std::vector<alg::graph::Edge> expectedEdgesOf4{{v4, v0, 2}, {v4, v1, 3}, {v4, v3, 6}};
+    EXPECT_EQ(expectedEdgesOf4, egressEdgesFromV4);
+}

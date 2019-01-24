@@ -11,7 +11,7 @@ namespace alg
 {
     namespace graph
     {
-            std::vector<std::pair<int, int>> dijkstra(const Graph& g, int src);
+            std::vector<int> dijkstra(const Graph& g, int src);
     }
 }
 

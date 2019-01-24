@@ -7,7 +7,7 @@
 
 using namespace ::testing;
 
-TEST(BFSTest, shouldCalculateSPF)
+TEST(BFSTest, x)
 {
     alg::graph::Graph graph{alg::graph::GraphType::Directed};
     auto v1 = graph.addVertex();
@@ -18,4 +18,5 @@ TEST(BFSTest, shouldCalculateSPF)
     std::vector<std::pair<int, int>> expectedSPF = {std::make_pair(v2, 5)};
 
     EXPECT_EQ(expectedSPF, result);
+    FAIL();
 }

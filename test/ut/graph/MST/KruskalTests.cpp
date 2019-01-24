@@ -12,4 +12,5 @@ using namespace ::testing;
 TEST(KruskalTest, asd)
 {
     alg::graph::mst::kruskal();
+    FAIL();
 }

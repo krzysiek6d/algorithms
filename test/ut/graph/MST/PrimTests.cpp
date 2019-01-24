@@ -11,4 +11,5 @@ using namespace ::testing;
 TEST(PrimTest, asd)
 {
     alg::graph::mst::prim();
+    FAIL();
 }

@@ -18,16 +18,20 @@ namespace alg
         public:
             Graph(GraphType type); // inheritance here ;)
             int getNumOfVertexes() const;
+
             int addVertex();
 
             void addEdge(int src, int dst, int cost = 1);
 
             std::vector<std::vector<boost::optional<int>>> getAdjacencyMatrix();
             std::vector<std::list<std::pair<int, int>>> getAdjacencyList();
-            boost::optional<int> getCost(int v1, int v2);
+            boost::optional<int> getCost(int v1, int v2) const;
             std::vector<int> getNeighbors(int v) const;
             std::vector<int> getIngressNeighbors(int v);
             std::vector<int> getEgressNeighbors(int v) const;
+
+            std::vector<Edge> getEgressEdges(int v) const;
+            std::vector<int> getVertexes() const;
 
         private:
             GraphType type;

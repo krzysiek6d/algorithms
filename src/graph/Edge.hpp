@@ -12,6 +12,10 @@ namespace alg
             Edge(int src, int dst, int cost) : src{src}, dst{dst}, cost{cost} {
 
             }
+            bool operator==(const Edge& edge) const
+            {
+                return edge.src == src && edge.dst == dst && edge.cost == cost;
+            }
 
             int src;
             int dst;

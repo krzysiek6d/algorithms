@@ -60,7 +60,7 @@ namespace alg
             return adjacencyLists;
         }
 
-        boost::optional<int> Graph::getCost(int v1, int v2)
+        boost::optional<int> Graph::getCost(int v1, int v2) const
         {
             for (auto&& e: edges) {
                 if (e.src == v1 && e.dst==v2)
@@ -102,6 +102,23 @@ namespace alg
                     neighbors.push_back(e.src);
             }
             return neighbors;
+        }
+
+        std::vector<Edge> Graph::getEgressEdges(int v) const
+        {
+            std::vector<Edge> egressEdges;
+            for (auto&& e: edges) {
+                if (e.src == v)
+                    egressEdges.push_back(e);
+                if (type == GraphType::Undirected && e.dst == v)
+                    egressEdges.push_back(Edge(e.dst, e.src, e.cost));
+            }
+            return egressEdges;
+        }
+
+        std::vector<int> Graph::getVertexes() const
+        {
+            return vertexes;
         }
     }
 }
