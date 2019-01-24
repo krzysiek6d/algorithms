@@ -15,7 +15,7 @@ TEST(GraphTest, shouldReturnProperNumOfVertexes)
     auto v2 = g.addVertex();
     g.addEdge(v1, v2, 2);
 
-    EXPECT_EQ(2, g.getNumOfVertexes());
+    EXPECT_EQ(2u, g.getNumOfVertexes());
 }
 
 

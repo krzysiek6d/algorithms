@@ -10,11 +10,10 @@ namespace alg
     {
         std::vector<int> dijkstra(const Graph& g, int src)
         {
-            auto vertexes = g.getVertexes();
             std::vector<int> distances;
             std::vector<int> prev;
             std::queue<int> queue;
-            for (unsigned int i = 0; i < vertexes.size(); i++)
+            for (unsigned int i = 0; i < g.getNumOfVertexes(); i++)
             {
                 distances.push_back(std::numeric_limits<int>::max());
                 prev.push_back(-1);

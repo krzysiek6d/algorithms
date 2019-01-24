@@ -17,7 +17,7 @@ namespace alg
         class Graph {
         public:
             Graph(GraphType type); // inheritance here ;)
-            int getNumOfVertexes() const;
+            std::size_t getNumOfVertexes() const;
 
             int addVertex();
 

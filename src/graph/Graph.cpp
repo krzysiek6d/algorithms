@@ -16,7 +16,7 @@ namespace alg
             return id;
         }
 
-        int Graph::getNumOfVertexes() const
+        std::size_t Graph::getNumOfVertexes() const
         {
             return vertexes.size();
         }
