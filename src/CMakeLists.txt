@@ -1,4 +1,5 @@
 add_subdirectory(graph)
+add_subdirectory(net)
 add_subdirectory(sorting)
 
 add_library(libAlgorithmMain OBJECT
@@ -8,7 +9,7 @@ find_package(Threads)
 
 set(algorithms_sources
         $<TARGET_OBJECTS:libAlgorithmMain>
-        $<TARGET_OBJECTS:libGraph>
+#        $<TARGET_OBJECTS:libGraph>
         )
 
 add_executable(${PROJECT_NAME} ${algorithms_sources})
