@@ -16,9 +16,9 @@ TEST(NetTest, boostAsioCanBeAlternative)
             0x00, 0x00, 0x00, 0x00,   0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00,   0x00, 0x00, 0x00, 0x01
     };
-    auto ip = boost::asio::ip::address::from_string("::1");
+    auto ip = boost::asio::ip::make_address("::1");
     if (ip.is_v6()) {
-        auto ipv6 = boost::asio::ip::address_v6::from_string("::1");
+        auto ipv6 = boost::asio::ip::make_address_v6("::1");
         auto ipv6bytes = ipv6.to_bytes();
         EXPECT_EQ(expected, ipv6bytes);
     }
