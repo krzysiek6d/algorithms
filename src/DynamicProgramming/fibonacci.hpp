@@ -12,6 +12,7 @@ namespace alg
     namespace dp
     {
         uint32_t fibonacci(uint32_t n);
+        uint32_t fibonacci_2(uint32_t n);
     }
 }
 

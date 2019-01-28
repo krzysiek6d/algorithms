@@ -20,5 +20,18 @@ namespace alg
             }
             return memo[n];
         }
+
+        uint32_t fibonacci_2(uint32_t n)
+        {
+            uint32_t prev_prev = 1;
+            uint32_t prev = 1;
+            for (uint32_t i = 2; i <= n; i++)
+            {
+                auto act = prev_prev + prev;
+                prev_prev = prev;
+                prev = act;
+            }
+            return prev;
+        }
     }
 }
