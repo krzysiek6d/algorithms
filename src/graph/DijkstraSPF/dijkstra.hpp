@@ -11,7 +11,8 @@ namespace alg
 {
     namespace graph
     {
-            std::vector<int> dijkstra(const Graph& g, int src);
+        std::vector<int> dijkstra(const Graph& g, int src);
+        std::vector<int> dijkstra_recursive(const Graph& g, int src);
     }
 }
 

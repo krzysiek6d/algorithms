@@ -7,9 +7,9 @@ namespace alg
 {
     namespace sorting
     {
-        void mergeSort()
-        {
-
-        }
+//        void mergeSort()
+//        {
+//
+//        }
     }
 }
