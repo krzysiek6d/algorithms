@@ -40,12 +40,6 @@ namespace alg
                 return num_of_ways;
             }
         }
-
-        int ways_to_create_sum(std::vector<int> values, int sum)
-        {
-            return 0;
-        }
-        ///////////////////////////////////////
         namespace combinations_withoutRepetition_Recursive {
             namespace detail {
                 int ways_to_create_sum(std::vector<int> values, int sum, int pos) {
@@ -66,20 +60,19 @@ namespace alg
                 return detail::ways_to_create_sum(values, sum, pos);
             }
         }
-
         namespace combinations_withRepetition_Recursive {
             namespace detail {
                 int ways_to_create_sum(std::vector<int> values, int sum, int pos) {
-                    if (sum==0)
+                    if (pos < 0 || sum < 0)
+                        return 0;
+                    if (sum == 0 && pos >= 0)
                         return 1;
-                    if (sum < 0)
-                        return 0;
-                    if (pos < 0)
-                        return 0;
-                    else
-                        return ways_to_create_sum(values, sum - values[pos], pos )    + // we take this element and allow to be reused
-                               ways_to_create_sum(values, sum - values[pos], pos - 1) + // we tale element
-                               ways_to_create_sum(values, sum,               pos - 1);  // we omit element
+
+                    return std::max(
+                           ways_to_create_sum(values, sum - values[pos], pos ),   // we take this element and allow to be reused
+
+                           ways_to_create_sum(values, sum - values[pos], pos - 1) + // we tale element
+                           ways_to_create_sum(values, sum,               pos - 1));  // we omit element
                 }
             }
 
@@ -88,23 +81,6 @@ namespace alg
                 return detail::ways_to_create_sum(values, sum, pos);
             }
         }
-
-        int ways_to_create_sum_order_does_not_matter(std::vector<int> values, int sum)
-        {
-            return 0;
-        }
-
-
-        ////////////////////////////////////////
-
-
-
-        int ways_to_create_sum_without_duplicates(std::vector<int> values, int sum)
-        {
-            return 0;
-        }
-
-
 
         int ways_to_create_sum(std::vector<int> values, int sum,
                                AlgorithmType algorithmType,

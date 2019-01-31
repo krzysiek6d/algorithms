@@ -203,3 +203,23 @@ TEST(num_of_ways_Recursive_Combinations_WithRepetition, tc5)
                                                    alg::dp::RepetitionType::WithRepetition); /// [1,3], [1,1,1,1], [2,2]
     EXPECT_EQ(3, num_of_ways);
 }
+
+TEST(num_of_ways_Recursive_Combinations_WithRepetition, tc6)
+{
+    std::vector<int> values{1, 2, 3};
+    auto num_of_ways = alg::dp::ways_to_create_sum(values, 5,
+                                                   alg::dp::AlgorithmType::Recursive,
+                                                   alg::dp::CombinatoricsType::Combinations,
+                                                   alg::dp::RepetitionType::WithRepetition); /// [1,1,1,1,1], [1,1,1,2], [1,1,3], [2,3]
+    EXPECT_EQ(4, num_of_ways);
+}
+
+TEST(num_of_ways_Recursive_Combinations_WithRepetition, tc7)
+{
+    std::vector<int> values{1, 2, 3, 4};
+    auto num_of_ways = alg::dp::ways_to_create_sum(values, 5,
+                                                   alg::dp::AlgorithmType::Recursive,
+                                                   alg::dp::CombinatoricsType::Combinations,
+                                                   alg::dp::RepetitionType::WithRepetition); /// [1,1,1,1,1], [1,1,1,2], [1,1,3], [1,4], [2,3]
+    EXPECT_EQ(5, num_of_ways);
+}
