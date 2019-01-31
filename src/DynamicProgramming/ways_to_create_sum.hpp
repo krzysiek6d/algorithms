@@ -9,14 +9,25 @@ namespace alg
 {
     namespace dp
     {
-        int ways_to_create_sum_recursive(std::vector<int> values, int sum);
-        int ways_to_create_sum(std::vector<int> values, int sum);
+        enum class AlgorithmType
+        {
+            DynamicProgramming,
+            Recursive
+        };
+        enum class RepetitionType
+        {
+            WithRepetition,
+            WithoutRepetition
+        };
+        enum class CombinatoricsType
+        {
+            Variations,
+            Combinations
+        };
 
-        int ways_to_create_sum_order_does_not_matter_recursive(std::vector<int> values, int sum);
-        int ways_to_create_sum_order_does_not_matter(std::vector<int> values, int sum);
-
-        int ways_to_create_sum_without_duplicates_recursive(std::vector<int> values, int sum);
-        int ways_to_create_sum_without_duplicates(std::vector<int> values, int sum);
+        int ways_to_create_sum(std::vector<int> values, int sum,
+                               AlgorithmType algorithmType,
+                               CombinatoricsType combinatoricsType, RepetitionType repetitionType);
     }
 }
 
