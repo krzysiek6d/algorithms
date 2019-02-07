@@ -13,17 +13,17 @@ struct A
 {
     explicit A(int x) : number(x) {}
     int number;
-//  TODO: check why unordered_map does not work with this, but with external operator it does
-//    bool operator==(const A& other)
-//    {
-//        return this->number == other.number;
-//    }
+    bool operator==(const A& other) const
+    {
+        numOfEqualOperatorCalls++;
+        return this->number == other.number;
+    }
 };
-bool operator==(const A& l, const A& r)
-{
-    numOfEqualOperatorCalls++;
-    return l.number == r.number;
-}
+//bool operator==(const A& l, const A& r)
+//{
+//    numOfEqualOperatorCalls++;
+//    return l.number == r.number;
+//}
 
 
 struct BadHash
