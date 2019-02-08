@@ -2,6 +2,7 @@ add_subdirectory(graph)
 add_subdirectory(net)
 add_subdirectory(sorting)
 add_subdirectory(DynamicProgramming)
+add_subdirectory(data_structures)
 
 add_library(libAlgorithmMain OBJECT
         main.cpp
