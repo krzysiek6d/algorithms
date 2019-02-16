@@ -24,6 +24,33 @@ namespace alg
                 return num_of_ways;
             }
         }
+
+        namespace vartiations_withRepetition_Dp {
+            namespace detail
+            {
+                int ways_to_create_sum(std::vector<int> values, int sum, std::vector<int>& dp)
+                {
+                    if (dp[sum] != -1)
+                        return dp[sum];
+
+                    int num_of_ways = 0;
+                    for (auto &&v: values) {
+                        if (sum - v >= 0) {
+                            num_of_ways += ways_to_create_sum(values, sum - v, dp);
+                        }
+                    }
+                    dp[sum] = num_of_ways;
+                    return dp[sum];
+                }
+            }
+            int ways_to_create_sum(std::vector<int> values, int sum) {
+                std::vector<int> dp(sum+1, -1);
+                dp[0] = 1;
+                auto ret =  detail::ways_to_create_sum(values, sum, dp);
+                return ret;
+            }
+        }
+
         namespace vartiations_withoutRepetition_Recursive {
             int ways_to_create_sum(std::vector<int> values, int sum) {
                 if (sum == 0)
@@ -109,6 +136,16 @@ namespace alg
                     else if(repetitionType==RepetitionType::WithoutRepetition)
                     {
                         return vartiations_withoutRepetition_Recursive::ways_to_create_sum(values, sum);
+                    }
+                }
+            }
+            else if (algorithmType==AlgorithmType::DynamicProgramming)
+            {
+                if (combinatoricsType==CombinatoricsType::Variations)
+                {
+                    if (repetitionType==RepetitionType::WithRepetition)
+                    {
+                        return vartiations_withRepetition_Dp::ways_to_create_sum(values, sum);
                     }
                 }
             }
