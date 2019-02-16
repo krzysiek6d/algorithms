@@ -15,7 +15,7 @@ std::unique_ptr<alg::structures::tree<T>> createNode(T value)
 
 TEST(tree, check_adding_elements)
 {
-    auto tree = createNode(0);
+    auto tree = alg::structures::make_tree(0);
     tree->left = createNode(1);
     tree->right = createNode(2);
     tree->left->left = createNode(3);
