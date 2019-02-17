@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <stdexcept>
+#include <iostream>
 #include "ways_to_create_sum.hpp"
 
 
@@ -26,28 +27,21 @@ namespace alg
         }
 
         namespace vartiations_withRepetition_Dp {
-            namespace detail
+            int ways_to_create_sum(std::vector<int> values, int sum)
             {
-                int ways_to_create_sum(std::vector<int> values, int sum, std::vector<int>& dp)
+                std::vector<int> dp(sum+1, 0);
+                dp[0] = 1;
+                for(int i = 1; i <= sum; i++)
                 {
-                    if (dp[sum] != -1)
-                        return dp[sum];
-
-                    int num_of_ways = 0;
-                    for (auto &&v: values) {
-                        if (sum - v >= 0) {
-                            num_of_ways += ways_to_create_sum(values, sum - v, dp);
+                    for(auto&& v : values)
+                    {
+                        if (v <= i)
+                        {
+                            dp[i] += dp[i - v];
                         }
                     }
-                    dp[sum] = num_of_ways;
-                    return dp[sum];
                 }
-            }
-            int ways_to_create_sum(std::vector<int> values, int sum) {
-                std::vector<int> dp(sum+1, -1);
-                dp[0] = 1;
-                auto ret =  detail::ways_to_create_sum(values, sum, dp);
-                return ret;
+                return dp[sum];
             }
         }
 
@@ -67,6 +61,30 @@ namespace alg
                 return num_of_ways;
             }
         }
+
+//        namespace vartiations_withoutRepetition_Dp {
+//            int ways_to_create_sum(std::vector<int> values, int sum) { // values are changing - dp table should keep that int mind!
+//                std::vector<int> dp(sum+1, 0);
+//                dp[0] = 1;
+//
+//                for(int i = 1; i <= sum; i++)
+//                {
+//                    for (auto v_iter = values.begin(); v_iter!= values.end();)
+//                    {
+//                        int v = *v_iter;
+//                        std::cout << "i: " << i << " v: " << v << std::endl;
+//                        if (i - v >= 0) {
+//
+//                            dp[i] += dp[i - v];
+//                            v_iter = values.erase(v_iter);
+//                            std::cout << "erasing v: " << v << std::endl;
+//                        }
+//                        else v_iter ++;
+//                    }
+//                }
+//                return dp[sum];
+//            }
+//        }
         namespace combinations_withoutRepetition_Recursive {
             namespace detail {
                 int ways_to_create_sum(std::vector<int> values, int sum, int pos) {
@@ -87,6 +105,28 @@ namespace alg
                 return detail::ways_to_create_sum(values, sum, pos);
             }
         }
+
+        namespace combinations_withoutRepetition_Dp {
+            namespace detail {
+                int ways_to_create_sum(std::vector<int> values, int sum, int pos) {
+                    if (sum==0)
+                        return 1;
+                    if (sum < 0)
+                        return 0;
+                    if (pos < 0)
+                        return 0;
+                    else
+                        return ways_to_create_sum(values, sum - values[pos], pos - 1) + // we tale element
+                               ways_to_create_sum(values, sum, pos - 1);                // we omit element
+                }
+            }
+
+            int ways_to_create_sum(std::vector<int> values, int sum) {
+                int pos = values.size()-1;
+                return detail::ways_to_create_sum(values, sum, pos);
+            }
+        }
+
         namespace combinations_withRepetition_Recursive {
             namespace detail {
                 int ways_to_create_sum(std::vector<int> values, int sum, int pos) {
@@ -146,6 +186,15 @@ namespace alg
                     if (repetitionType==RepetitionType::WithRepetition)
                     {
                         return vartiations_withRepetition_Dp::ways_to_create_sum(values, sum);
+                    }
+//                    if (repetitionType==RepetitionType::WithoutRepetition)
+//                    {
+//                        return vartiations_withoutRepetition_Dp::ways_to_create_sum(values, sum);
+//                    }
+                }
+                else if (combinatoricsType==CombinatoricsType::Combinations) {
+                    if (repetitionType == RepetitionType::WithoutRepetition) {
+                        return combinations_withoutRepetition_Dp::ways_to_create_sum(values, sum);
                     }
                 }
             }

@@ -6,272 +6,124 @@
 
 using namespace ::testing;
 
+using test_data = std::tuple<int, std::vector<int>, int>; // sum, values, result
+struct Variations_WithRepetition : public ::testing::TestWithParam<test_data> {};
+struct Variations_WithoutRepetition : public ::testing::TestWithParam<test_data> {};
+struct Combinations_WithRepetition : public ::testing::TestWithParam<test_data> {};
+struct Combinations_WithoutRepetition : public ::testing::TestWithParam<test_data> {};
+std::vector<test_data> variations_with_repetition = {
+        {1, {1}, 1},
+        {1, {1, 2}, 1},
+        {2, {1, 2}, 2},    /// {1,1}, {2}
+        {3, {1, 2, 3}, 4}, /// [1,1,1], [1,2], [2.1], [3]
+        {4, {1, 2, 3,}, 7}, /// [1,1,1,1], [1,1,2], [1,2,1], [2,1,1], [2,2], [3,1], [1,3]
+        {4, {2, 3, 4, 5}, 2}, ///  [2,2], [4]
+        {5, {1, 2}, 8},
+        {8, {5, 12}, 0}
+};
+std::vector<test_data> variations_without_repetition = {
+        {1, {1}, 1},
+        {1, {1, 2}, 1},
+        {2, {1, 2}, 1},    /// {2}
+        {3, {1, 2, 3}, 3}, /// [2,1], [1,2], [3]
+        {4, {1, 2, 3,}, 2}, /// [3,1], [1,3]
+};
 
-TEST(num_of_ways_Recursive_Variations_WithRepetition, tc1)
+std::vector<test_data> combinations_with_repetition = {
+        {1, {1}, 1},
+        {1, {1, 2}, 1},
+        {2, {1, 2}, 2}, /// [2], [1,1]
+        {3, {1, 2, 3}, 3}, /// [3], [1,2], [1,1,1]
+        {4, {1, 2, 3}, 3}, /// [1,3], [1,1,1,1], [2,2]
+        {5, {1, 2, 3}, 4}, /// [1,1,1,1,1], [1,1,1,2], [1,1,3], [2,3]
+        {5, {1, 2, 3, 4}, 5}, /// [1,1,1,1,1], [1,1,1,2], [1,1,3], [1,4], [2,3]
+
+};
+std::vector<test_data> combinations_without_repetition = {
+        {1, {1}, 1},
+        {1, {1, 2}, 1},
+        {2, {1, 2}, 1},
+        {3, {1, 2, 3}, 2}, /// [3], [1,2]
+        {4, {1, 2, 3}, 1}, /// [1,3]
+};
+
+INSTANTIATE_TEST_CASE_P(Recursive_Variations_WithRepetition_Tests,
+                        Variations_WithRepetition,
+                        ::testing::ValuesIn(variations_with_repetition));
+INSTANTIATE_TEST_CASE_P(Variations_WithoutRepetition_Tests,
+                        Variations_WithoutRepetition,
+                        ::testing::ValuesIn(variations_without_repetition));
+
+INSTANTIATE_TEST_CASE_P(Recursive_Combinations_WithRepetition_Tests,
+                        Combinations_WithRepetition,
+                        ::testing::ValuesIn(combinations_with_repetition));
+
+
+INSTANTIATE_TEST_CASE_P(Recursive_Combinations_WithoutRepetition_Tests,
+                        Combinations_WithoutRepetition,
+                        ::testing::ValuesIn(combinations_without_repetition));
+
+TEST_P(Variations_WithRepetition, recursive)
 {
-    std::vector<int> values{1};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 1,
+    auto args = GetParam();
+    auto sum = std::get<0>(args);
+    auto values = std::get<1>(args);
+    auto expected_num_of_ways = std::get<2>(args);
+    auto num_of_ways = alg::dp::ways_to_create_sum(values, sum,
                                                    alg::dp::AlgorithmType::Recursive,
                                                    alg::dp::CombinatoricsType::Variations,
                                                    alg::dp::RepetitionType::WithRepetition);
-    EXPECT_EQ(1, num_of_ways);
+    EXPECT_EQ(expected_num_of_ways, num_of_ways);
 }
 
-TEST(num_of_ways_Recursive_Variations_WithRepetition, tc2)
+TEST_P(Variations_WithRepetition, dp)
 {
-    std::vector<int> values{1, 2};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 1,
-                                                   alg::dp::AlgorithmType::Recursive,
-                                                   alg::dp::CombinatoricsType::Variations,
-                                                   alg::dp::RepetitionType::WithRepetition);
-    EXPECT_EQ(1, num_of_ways);
-}
-TEST(num_of_ways_Recursive_Variations_WithRepetition, tc3)
-{
-    std::vector<int> values{1, 2};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 2,
-                                                   alg::dp::AlgorithmType::Recursive,
-                                                   alg::dp::CombinatoricsType::Variations,
-                                                   alg::dp::RepetitionType::WithRepetition);
-    EXPECT_EQ(2, num_of_ways);
-}
-
-TEST(num_of_ways_Recursive_Variations_WithRepetition, tc4)
-{
-    std::vector<int> values{1, 2, 3};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 3,
-                                                   alg::dp::AlgorithmType::Recursive,
-                                                   alg::dp::CombinatoricsType::Variations,
-                                                   alg::dp::RepetitionType::WithRepetition); /// [1,1,1], [1,2], [2.1], [3]
-    EXPECT_EQ(4, num_of_ways);
-}
-
-TEST(num_of_ways_Recursive_Variations_WithRepetition, tc5)
-{
-    std::vector<int> values{1, 2, 3};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 4,
-                                                   alg::dp::AlgorithmType::Recursive,
-                                                   alg::dp::CombinatoricsType::Variations,
-                                                   alg::dp::RepetitionType::WithRepetition); /// [1,1,1,1], [1,1,2], [1,2,1], [2,1,1], [2,2], [3,1], [1,3]
-    EXPECT_EQ(7, num_of_ways);
-}
-
-TEST(num_of_ways_Recursive_Variations_WithRepetition, dp_tc1)
-{
-    std::vector<int> values{1};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 1,
+    auto args = GetParam();
+    auto sum = std::get<0>(args);
+    auto values = std::get<1>(args);
+    auto expected_num_of_ways = std::get<2>(args);
+    auto num_of_ways = alg::dp::ways_to_create_sum(values, sum,
                                                    alg::dp::AlgorithmType::DynamicProgramming,
                                                    alg::dp::CombinatoricsType::Variations,
                                                    alg::dp::RepetitionType::WithRepetition);
-    EXPECT_EQ(1, num_of_ways);
+    EXPECT_EQ(expected_num_of_ways, num_of_ways);
 }
 
-TEST(num_of_ways_Recursive_Variations_WithRepetition, dp_tc2)
+TEST_P(Variations_WithoutRepetition, recursive)
 {
-    std::vector<int> values{1, 2};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 1,
-                                                   alg::dp::AlgorithmType::DynamicProgramming,
-                                                   alg::dp::CombinatoricsType::Variations,
-                                                   alg::dp::RepetitionType::WithRepetition);
-    EXPECT_EQ(1, num_of_ways);
-}
-TEST(num_of_ways_Recursive_Variations_WithRepetition, dp_tc3)
-{
-    std::vector<int> values{1, 2};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 2,
-                                                   alg::dp::AlgorithmType::DynamicProgramming,
-                                                   alg::dp::CombinatoricsType::Variations,
-                                                   alg::dp::RepetitionType::WithRepetition);
-    EXPECT_EQ(2, num_of_ways);
-}
-
-TEST(num_of_ways_Recursive_Variations_WithRepetition, dp_tc4)
-{
-    std::vector<int> values{1, 2, 3};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 3,
-                                                   alg::dp::AlgorithmType::DynamicProgramming,
-                                                   alg::dp::CombinatoricsType::Variations,
-                                                   alg::dp::RepetitionType::WithRepetition); /// [1,1,1], [1,2], [2.1], [3]
-    EXPECT_EQ(4, num_of_ways);
-}
-
-TEST(num_of_ways_Recursive_Variations_WithRepetition, dp_tc5)
-{
-    std::vector<int> values{1, 2, 3};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 4,
-                                                   alg::dp::AlgorithmType::DynamicProgramming,
-                                                   alg::dp::CombinatoricsType::Variations,
-                                                   alg::dp::RepetitionType::WithRepetition); /// [1,1,1,1], [1,1,2], [1,2,1], [2,1,1], [2,2], [3,1], [1,3]
-    EXPECT_EQ(7, num_of_ways);
-}
-
-
-
-
-//////////////////////////////
-TEST(num_of_ways_Recursive_Variations_WithoutRepetition, tc1)
-{
-    std::vector<int> values{1};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 1,
+    auto args = GetParam();
+    auto sum = std::get<0>(args);
+    auto values = std::get<1>(args);
+    auto expected_num_of_ways = std::get<2>(args);
+    auto num_of_ways = alg::dp::ways_to_create_sum(values, sum,
                                                    alg::dp::AlgorithmType::Recursive,
                                                    alg::dp::CombinatoricsType::Variations,
                                                    alg::dp::RepetitionType::WithoutRepetition);
-    EXPECT_EQ(1, num_of_ways);
+    EXPECT_EQ(expected_num_of_ways, num_of_ways);
 }
 
-TEST(num_of_ways_Recursive_Variations_WithoutRepetition, tc2)
+TEST_P(Combinations_WithoutRepetition, recursive)
 {
-    std::vector<int> values{1, 2};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 1,
-                                                   alg::dp::AlgorithmType::Recursive,
-                                                   alg::dp::CombinatoricsType::Variations,
-                                                   alg::dp::RepetitionType::WithoutRepetition); /// [1]
-    EXPECT_EQ(1, num_of_ways);
-}
-TEST(num_of_ways_Recursive_Variations_WithoutRepetition, tc3)
-{
-    std::vector<int> values{1, 2};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 2,
-                                                   alg::dp::AlgorithmType::Recursive,
-                                                   alg::dp::CombinatoricsType::Variations,
-                                                   alg::dp::RepetitionType::WithoutRepetition); /// [2]
-    EXPECT_EQ(1, num_of_ways);
-}
-
-TEST(num_of_ways_Recursive_Variations_WithoutRepetition, tc4)
-{
-    std::vector<int> values{1, 2, 3};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 3,
-                                                   alg::dp::AlgorithmType::Recursive,
-                                                   alg::dp::CombinatoricsType::Variations,
-                                                   alg::dp::RepetitionType::WithoutRepetition); /// [2,1], [3], [1,2]
-    EXPECT_EQ(3, num_of_ways);
-}
-
-TEST(num_of_ways_Recursive_Variations_WithoutRepetition, tc5)
-{
-    std::vector<int> values{1, 2, 3};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 4,
-                                                   alg::dp::AlgorithmType::Recursive,
-                                                   alg::dp::CombinatoricsType::Variations,
-                                                   alg::dp::RepetitionType::WithoutRepetition); /// [3,1], [1,3]
-    EXPECT_EQ(2, num_of_ways);
-}
-
-//////////////////////////////////////////////////
-TEST(num_of_ways_Recursive_Combinations_WithoutRepetition, tc1) {
-    std::vector<int> values{1};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 1,
+    auto args = GetParam();
+    auto sum = std::get<0>(args);
+    auto values = std::get<1>(args);
+    auto expected_num_of_ways = std::get<2>(args);
+    auto num_of_ways = alg::dp::ways_to_create_sum(values, sum,
                                                    alg::dp::AlgorithmType::Recursive,
                                                    alg::dp::CombinatoricsType::Combinations,
-                                                   alg::dp::RepetitionType::WithoutRepetition);  // 1
-    EXPECT_EQ(1, num_of_ways);
+                                                   alg::dp::RepetitionType::WithoutRepetition);
+    EXPECT_EQ(expected_num_of_ways, num_of_ways);
 }
 
-TEST(num_of_ways_Recursive_Combinations_WithoutRepetition, tc2)
+TEST_P(Combinations_WithRepetition, recursive)
 {
-    std::vector<int> values{1, 2};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 1,
+    auto args = GetParam();
+    auto sum = std::get<0>(args);
+    auto values = std::get<1>(args);
+    auto expected_num_of_ways = std::get<2>(args);
+    auto num_of_ways = alg::dp::ways_to_create_sum(values, sum,
                                                    alg::dp::AlgorithmType::Recursive,
                                                    alg::dp::CombinatoricsType::Combinations,
-                                                   alg::dp::RepetitionType::WithoutRepetition); /// [1]
-    EXPECT_EQ(1, num_of_ways);
-}
-TEST(num_of_ways_Recursive_Combinations_WithoutRepetition, tc3)
-{
-    std::vector<int> values{1, 2};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 2,
-                                                   alg::dp::AlgorithmType::Recursive,
-                                                   alg::dp::CombinatoricsType::Combinations,
-                                                   alg::dp::RepetitionType::WithoutRepetition); /// [2]
-    EXPECT_EQ(1, num_of_ways);
-}
-
-TEST(num_of_ways_Recursive_Combinations_WithoutRepetition, tc4)
-{
-    std::vector<int> values{1, 2, 3};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 3,
-                                                   alg::dp::AlgorithmType::Recursive,
-                                                   alg::dp::CombinatoricsType::Combinations,
-                                                   alg::dp::RepetitionType::WithoutRepetition); /// [3], [1,2]
-    EXPECT_EQ(2, num_of_ways);
-}
-
-TEST(num_of_ways_Recursive_Combinations_WithoutRepetition, tc5)
-{
-    std::vector<int> values{1, 2, 3};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 4,
-                                                   alg::dp::AlgorithmType::Recursive,
-                                                   alg::dp::CombinatoricsType::Combinations,
-                                                   alg::dp::RepetitionType::WithoutRepetition); /// [1,3]
-    EXPECT_EQ(1, num_of_ways);
-}
-
-////////////////////////////////////////////////////////////
-TEST(num_of_ways_Recursive_Combinations_WithRepetition, tc1) {
-    std::vector<int> values{1};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 1,
-                                                   alg::dp::AlgorithmType::Recursive,
-                                                   alg::dp::CombinatoricsType::Combinations,
-                                                   alg::dp::RepetitionType::WithRepetition);  // 1
-    EXPECT_EQ(1, num_of_ways);
-}
-
-TEST(num_of_ways_Recursive_Combinations_WithRepetition, tc2)
-{
-    std::vector<int> values{1, 2};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 1,
-                                                   alg::dp::AlgorithmType::Recursive,
-                                                   alg::dp::CombinatoricsType::Combinations,
-                                                   alg::dp::RepetitionType::WithRepetition); /// [1]
-    EXPECT_EQ(1, num_of_ways);
-}
-TEST(num_of_ways_Recursive_Combinations_WithRepetition, tc3)
-{
-    std::vector<int> values{1, 2};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 2,
-                                                   alg::dp::AlgorithmType::Recursive,
-                                                   alg::dp::CombinatoricsType::Combinations,
-                                                   alg::dp::RepetitionType::WithRepetition); /// [2], [1,1]
-    EXPECT_EQ(2, num_of_ways);
-}
-
-TEST(num_of_ways_Recursive_Combinations_WithRepetition, tc4)
-{
-    std::vector<int> values{1, 2, 3};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 3,
-                                                   alg::dp::AlgorithmType::Recursive,
-                                                   alg::dp::CombinatoricsType::Combinations,
-                                                   alg::dp::RepetitionType::WithRepetition); /// [3], [1,2], [1,1,1]
-    EXPECT_EQ(3, num_of_ways);
-}
-
-TEST(num_of_ways_Recursive_Combinations_WithRepetition, tc5)
-{
-    std::vector<int> values{1, 2, 3};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 4,
-                                                   alg::dp::AlgorithmType::Recursive,
-                                                   alg::dp::CombinatoricsType::Combinations,
-                                                   alg::dp::RepetitionType::WithRepetition); /// [1,3], [1,1,1,1], [2,2]
-    EXPECT_EQ(3, num_of_ways);
-}
-
-TEST(num_of_ways_Recursive_Combinations_WithRepetition, tc6)
-{
-    std::vector<int> values{1, 2, 3};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 5,
-                                                   alg::dp::AlgorithmType::Recursive,
-                                                   alg::dp::CombinatoricsType::Combinations,
-                                                   alg::dp::RepetitionType::WithRepetition); /// [1,1,1,1,1], [1,1,1,2], [1,1,3], [2,3]
-    EXPECT_EQ(4, num_of_ways);
-}
-
-TEST(num_of_ways_Recursive_Combinations_WithRepetition, tc7)
-{
-    std::vector<int> values{1, 2, 3, 4};
-    auto num_of_ways = alg::dp::ways_to_create_sum(values, 5,
-                                                   alg::dp::AlgorithmType::Recursive,
-                                                   alg::dp::CombinatoricsType::Combinations,
-                                                   alg::dp::RepetitionType::WithRepetition); /// [1,1,1,1,1], [1,1,1,2], [1,1,3], [1,4], [2,3]
-    EXPECT_EQ(5, num_of_ways);
+                                                   alg::dp::RepetitionType::WithRepetition);
+    EXPECT_EQ(expected_num_of_ways, num_of_ways);
 }
