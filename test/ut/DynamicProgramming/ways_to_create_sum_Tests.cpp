@@ -47,19 +47,16 @@ std::vector<test_data> combinations_without_repetition = {
         {4, {1, 2, 3}, 1}, /// [1,3]
 };
 
-INSTANTIATE_TEST_CASE_P(Recursive_Variations_WithRepetition_Tests,
+INSTANTIATE_TEST_CASE_P(Variations_WithRepetition_Tests,
                         Variations_WithRepetition,
                         ::testing::ValuesIn(variations_with_repetition));
 INSTANTIATE_TEST_CASE_P(Variations_WithoutRepetition_Tests,
                         Variations_WithoutRepetition,
                         ::testing::ValuesIn(variations_without_repetition));
-
-INSTANTIATE_TEST_CASE_P(Recursive_Combinations_WithRepetition_Tests,
+INSTANTIATE_TEST_CASE_P(Combinations_WithRepetition_Tests,
                         Combinations_WithRepetition,
                         ::testing::ValuesIn(combinations_with_repetition));
-
-
-INSTANTIATE_TEST_CASE_P(Recursive_Combinations_WithoutRepetition_Tests,
+INSTANTIATE_TEST_CASE_P(Combinations_WithoutRepetition_Tests,
                         Combinations_WithoutRepetition,
                         ::testing::ValuesIn(combinations_without_repetition));
 
@@ -110,6 +107,19 @@ TEST_P(Combinations_WithoutRepetition, recursive)
     auto expected_num_of_ways = std::get<2>(args);
     auto num_of_ways = alg::dp::ways_to_create_sum(values, sum,
                                                    alg::dp::AlgorithmType::Recursive,
+                                                   alg::dp::CombinatoricsType::Combinations,
+                                                   alg::dp::RepetitionType::WithoutRepetition);
+    EXPECT_EQ(expected_num_of_ways, num_of_ways);
+}
+
+TEST_P(Combinations_WithoutRepetition, dp)
+{
+    auto args = GetParam();
+    auto sum = std::get<0>(args);
+    auto values = std::get<1>(args);
+    auto expected_num_of_ways = std::get<2>(args);
+    auto num_of_ways = alg::dp::ways_to_create_sum(values, sum,
+                                                   alg::dp::AlgorithmType::DynamicProgramming,
                                                    alg::dp::CombinatoricsType::Combinations,
                                                    alg::dp::RepetitionType::WithoutRepetition);
     EXPECT_EQ(expected_num_of_ways, num_of_ways);

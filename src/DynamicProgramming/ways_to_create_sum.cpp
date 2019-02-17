@@ -108,22 +108,37 @@ namespace alg
 
         namespace combinations_withoutRepetition_Dp {
             namespace detail {
-                int ways_to_create_sum(std::vector<int> values, int sum, int pos) {
-                    if (sum==0)
-                        return 1;
-                    if (sum < 0)
-                        return 0;
-                    if (pos < 0)
-                        return 0;
-                    else
-                        return ways_to_create_sum(values, sum - values[pos], pos - 1) + // we tale element
-                               ways_to_create_sum(values, sum, pos - 1);                // we omit element
+                int ways_to_create_sum(std::vector<int> values, int sum) {
+                    int numofValues = (int)values.size();
+                    std::vector<std::vector<int>> dp;
+                    std::vector<int> v(numofValues+1, 1);
+                    dp.emplace_back(v);
+                    for(int i = 1; i <=sum; i++)
+                    {
+                        std::vector<int> v(numofValues+1, 0);
+                        dp.emplace_back(v);
+                    }
+
+
+                    for(int i=1; i<=sum; i++)
+                    {
+                        for(int j=1; j <= numofValues; j++)
+                        {
+                            int result = 0;
+                            if (i - values[j-1] >= 0 && j-1 >= 0)
+                                result += dp[i - values[j-1]][j-1];
+                            if (j-1 >= 0)
+                                result += dp[i][j-1];
+                            dp[i][j] = result;
+                        }
+                    }
+                    return dp[sum][numofValues];
+
                 }
             }
 
             int ways_to_create_sum(std::vector<int> values, int sum) {
-                int pos = values.size()-1;
-                return detail::ways_to_create_sum(values, sum, pos);
+                return detail::ways_to_create_sum(values, sum);
             }
         }
 
@@ -192,8 +207,10 @@ namespace alg
 //                        return vartiations_withoutRepetition_Dp::ways_to_create_sum(values, sum);
 //                    }
                 }
-                else if (combinatoricsType==CombinatoricsType::Combinations) {
-                    if (repetitionType == RepetitionType::WithoutRepetition) {
+                else if (combinatoricsType==CombinatoricsType::Combinations)
+                {
+                    if (repetitionType == RepetitionType::WithoutRepetition)
+                    {
                         return combinations_withoutRepetition_Dp::ways_to_create_sum(values, sum);
                     }
                 }
