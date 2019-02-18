@@ -25,7 +25,7 @@ TEST(callbacks, raw_function)
 TEST(callbacks, std_function_needs_casting)
 {
     std::function<void(int)> cpp_func = nullptr;
-    
+
     EXPECT_EQ(nullptr, cpp_func.target<fun_type>());
     cpp_func = c_function;
     EXPECT_NE(nullptr, cpp_func.target<fun_type>());
