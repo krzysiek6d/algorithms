@@ -26,3 +26,25 @@ TEST(knapsack, rec2)
     items.emplace_back(std::make_pair(5, 2));
     EXPECT_EQ(16, alg::recursive::knapsack(items, 10));
 }
+
+TEST(knapsack, dp1)
+{
+    using weight = int;
+    using value = int;
+    std::vector<std::pair<weight, value>> items;
+    items.emplace_back(std::make_pair(1, 5));
+    EXPECT_EQ(5, alg::dp::knapsack(items, 1));
+}
+
+TEST(knapsack, dp2)
+{
+    using weight = int;
+    using value = int;
+    std::vector<std::pair<weight, value>> items;
+    items.emplace_back(std::make_pair(1, 5));
+    items.emplace_back(std::make_pair(2, 3));
+    items.emplace_back(std::make_pair(4, 5));
+    items.emplace_back(std::make_pair(2, 3));
+    items.emplace_back(std::make_pair(5, 2));
+    EXPECT_EQ(16, alg::dp::knapsack(items, 10));
+}

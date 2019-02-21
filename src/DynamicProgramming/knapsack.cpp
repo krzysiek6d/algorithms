@@ -5,14 +5,6 @@
 #include "knapsack.hpp"
 namespace alg
 {
-    namespace dp
-    {
-
-        int knapsack(std::vector<std::pair<int, int>> items, int sizeOfKnapsack)
-        {
-            return {};
-        };
-    }
     namespace recursive
     {
         namespace detail {
@@ -43,6 +35,34 @@ namespace alg
         int knapsack(std::vector<std::pair<int, int>> items, int sizeOfKnapsack)
         {
             return detail::knapsack(items, sizeOfKnapsack, items.size());
+        }
+    }
+
+    namespace dp
+    {
+        int knapsack(std::vector<std::pair<int, int>> items, int sizeOfKnapsack)
+        {
+            std::vector<std::vector<int>> dp(sizeOfKnapsack+1, std::vector<int>(items.size()+1));
+
+            for (int i = 1; i <= sizeOfKnapsack; i++)
+            {
+                for (int j = 1; j <= (int)items.size(); j++)
+                {
+                    int currentWeight = items[j-1].first;
+                    int currentValue  = items[j-1].second;
+                    if (currentWeight > i)
+                    {
+                        dp[i][j] = dp[i][j-1];
+                    }
+                    else {
+                        int temp1 = currentValue + dp[i - currentWeight][j - 1]; //take element
+                        int temp2 = dp[i][j - 1]; // omit element
+                        dp[i][j] = std::max(temp1, temp2);
+
+                    }
+                }
+            }
+            return dp[sizeOfKnapsack][items.size()];
         }
     }
 }
