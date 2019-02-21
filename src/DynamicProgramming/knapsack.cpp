@@ -2,6 +2,7 @@
 // Created by pawluch on 1/29/19.
 //
 
+#include <iostream>
 #include "knapsack.hpp"
 namespace alg
 {
@@ -62,6 +63,20 @@ namespace alg
                     }
                 }
             }
+            // printing backwards - works :)
+//            int value = dp[sizeOfKnapsack][items.size()];
+//            int knapsackSize = sizeOfKnapsack;
+//            for (int i = items.size(); i >0 && value > 0; i--)
+//            {
+//                if (value == dp[sizeOfKnapsack][i-1])
+//                    continue;
+//                else
+//                {
+//                    std::cout << "item (" << items[i-1].first << ", " << items[i-1].second << ")" << std::endl;
+//                    value = value - items[i-1].second;
+//                    knapsackSize = knapsackSize - items[i-1].first;
+//                }
+//            }
             return dp[sizeOfKnapsack][items.size()];
         }
     }
