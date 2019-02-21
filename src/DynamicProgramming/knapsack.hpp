@@ -10,7 +10,12 @@ namespace alg
 {
     namespace dp
     {
-        std::vector<std::pair<int, int>> getItemsForKnapsack(std::vector<std::pair<int, int>> items, int sizeOfKnapsack);
+        int knapsack(std::vector<std::pair<int, int>> items, int sizeOfKnapsack);
+    }
+    
+    namespace recursive
+    {
+        int knapsack(std::vector<std::pair<int, int>> items, int sizeOfKnapsack);
     }
 }
 
