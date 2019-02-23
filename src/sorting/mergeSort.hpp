@@ -18,30 +18,26 @@ namespace alg
         {
             template <typename RandomIt>
             inline constexpr std::vector<RandomIt> merge(RandomIt begin1, RandomIt end1, RandomIt begin2, RandomIt end2) {
-                RandomIt begin1_ = begin1;
-                RandomIt end1_ = end1;
-                RandomIt begin2_ = begin2;
-                RandomIt end2_ = end2;
-                auto length = std::distance(begin1_, end1_) + std::distance(begin2_, end2_);
+                auto length = std::distance(begin1, end1) + std::distance(begin2, end2);
                 std::vector<RandomIt> mergedIterators;
                 mergedIterators.reserve(length);
                 for (auto i = 0u; i < length; i++) {
-                    if (begin1_ != end1_) {
-                        if (begin2_ != end2_) {
-                            if (*begin1_ < *begin2_) {
-                                mergedIterators.emplace_back(begin1_);
-                                begin1_ = std::next(begin1_);
+                    if (begin1 != end1) {
+                        if (begin2 != end2) {
+                            if (*begin1 < *begin2) {
+                                mergedIterators.emplace_back(begin1);
+                                begin1 = std::next(begin1);
                             } else {
-                                mergedIterators.emplace_back(begin2_);
-                                begin2_ = std::next(begin2_);
+                                mergedIterators.emplace_back(begin2);
+                                begin2 = std::next(begin2);
                             }
                         } else {
-                            mergedIterators.emplace_back(begin1_);
-                            begin1_ = std::next(begin1_);
+                            mergedIterators.emplace_back(begin1);
+                            begin1 = std::next(begin1);
                         }
-                    } else if (begin2_ != end2_) {
-                        mergedIterators.emplace_back(begin2_);
-                        begin2_ = std::next(begin2_);
+                    } else if (begin2 != end2) {
+                        mergedIterators.emplace_back(begin2);
+                        begin2 = std::next(begin2);
                     }
                 }
                 return mergedIterators;
@@ -49,27 +45,22 @@ namespace alg
             template <typename RandomIt>
             inline constexpr void relocateValues(RandomIt begin1, RandomIt end1, RandomIt begin2, RandomIt end2, std::vector<RandomIt> mergedIterators)
             {
-
-                RandomIt begin1_ = begin1;
-                RandomIt end1_ = end1;
-                RandomIt begin2_ = begin2;
-                RandomIt end2_ = end2;
                 auto i = 0u;
-                std::vector<typename std::remove_reference<decltype(*begin1_)>::type> values;
+                std::vector<typename std::remove_reference<decltype(*begin1)>::type> values;
                 for (auto && elemIt: mergedIterators)
                 {
                     values.emplace_back(std::move(*elemIt));
                 }
-                while (begin1_ != end1_)
+                while (begin1 != end1)
                 {
-                    *begin1_ = std::move(values[i]);
-                    begin1_ = std::next(begin1_);
+                    *begin1 = std::move(values[i]);
+                    begin1 = std::next(begin1);
                     i++;
                 }
-                while (begin2_ != end2_)
+                while (begin2 != end2)
                 {
-                    *begin2_ = std::move(values[i]);
-                    begin2_ = std::next(begin2_);
+                    *begin2 = std::move(values[i]);
+                    begin2 = std::next(begin2);
                     i++;
                 }
             }
