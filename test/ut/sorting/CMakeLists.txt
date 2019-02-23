@@ -3,7 +3,6 @@ set(test_name SortingTests)
 file(GLOB test_sources *.cpp **/*.cpp **/**/*.cpp)
 
 add_executable(${test_name}
-        $<TARGET_OBJECTS:libSorting>
         $<TARGET_OBJECTS:gtest>
         ${test_sources})
 
