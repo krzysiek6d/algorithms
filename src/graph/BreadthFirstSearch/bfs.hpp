@@ -6,12 +6,13 @@
 #define ALGORITHMS_BFS_HPP
 
 #include <graph/Graph.hpp>
+#include <functional>
 
 namespace alg
 {
     namespace graph
     {
-        std::vector<std::pair<int, int>> bfs(const Graph& graph, int src);
+        void bfs(const Graph& graph, int src, std::function<void(int)> callback = nullptr);
     }
 }
 

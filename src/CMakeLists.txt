@@ -11,7 +11,7 @@ find_package(Threads)
 set(algorithms_sources
         $<TARGET_OBJECTS:libAlgorithmMain>
 #        $<TARGET_OBJECTS:libGraph>
-        )
+        games/sudoku.hpp)
 
 add_executable(${PROJECT_NAME} ${algorithms_sources})
 target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})

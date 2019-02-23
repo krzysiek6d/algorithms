@@ -2,15 +2,39 @@
 // Created by pawluch on 1/24/19.
 //
 
+#include <queue>
+#include <iostream>
 #include "bfs.hpp"
 
 namespace alg
 {
     namespace graph
     {
-        std::vector<std::pair<int, int>> bfs(const Graph& graph, int src)
+        void bfs(const Graph& graph, int src, std::function<void(int)> callback)
         {
-            return {};
+            std::vector<bool> visited(graph.getNumOfVertexes(), false);
+            std::queue<int > queue;
+
+            visited[src] = true;
+            queue.push(src);
+
+            while (!queue.empty())
+            {
+                auto current = queue.front();
+                queue.pop();
+                if (callback)
+                {
+                    callback(current);
+                }
+                for (auto neighbor: graph.getNeighbors(current))
+                {
+                    if (!visited[neighbor])
+                    {
+                        visited[neighbor] = true;
+                        queue.push(neighbor);
+                    }
+                }
+            }
         }
     }
 }
