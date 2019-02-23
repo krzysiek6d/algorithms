@@ -8,6 +8,7 @@
 
 #include <iterator>
 #include <iostream>
+#include <vector>
 
 namespace alg
 {
@@ -16,52 +17,73 @@ namespace alg
         namespace detail
         {
             template <typename RandomIt>
-            inline constexpr void merge(RandomIt begin1, RandomIt end1, RandomIt begin2, RandomIt end2)
-            {
+            inline constexpr std::vector<RandomIt> merge(RandomIt begin1, RandomIt end1, RandomIt begin2, RandomIt end2) {
                 RandomIt begin1_ = begin1;
                 RandomIt end1_ = end1;
-                RandomIt begin2_  = begin2;
+                RandomIt begin2_ = begin2;
                 RandomIt end2_ = end2;
-                std::cout << "BEFORE MERGE" << std::endl;
-                std::copy(begin1, end1, std::ostream_iterator<int>(std::cout, " ")); std::cout << std::endl;
-                std::copy(begin2, end2, std::ostream_iterator<int>(std::cout, " ")); std::cout << std::endl;
-
-                while (begin1 != end1 && begin2 != end2)
-                {
-                    if (*begin1 > *begin2)
-                    {
-                        std::swap(*begin1, *begin2);
-                        begin1 = std::next(begin1);
-                        begin2 = std::next(begin2);
-                    } else
-                    {
-                        begin1 = std::next(begin1);
+                auto length = std::distance(begin1_, end1_) + std::distance(begin2_, end2_);
+                std::vector<RandomIt> mergedIterators;
+                mergedIterators.reserve(length);
+                for (auto i = 0u; i < length; i++) {
+                    if (begin1_ != end1_) {
+                        if (begin2_ != end2_) {
+                            if (*begin1_ < *begin2_) {
+                                mergedIterators.emplace_back(begin1_);
+                                begin1_ = std::next(begin1_);
+                            } else {
+                                mergedIterators.emplace_back(begin2_);
+                                begin2_ = std::next(begin2_);
+                            }
+                        } else {
+                            mergedIterators.emplace_back(begin1_);
+                            begin1_ = std::next(begin1_);
+                        }
+                    } else if (begin2_ != end2_) {
+                        mergedIterators.emplace_back(begin2_);
+                        begin2_ = std::next(begin2_);
                     }
                 }
-//                while (begin1 != end1) // first [] was longer
-//                {
-//
-//                }
-//                while (begin2 != end2) // first [] was longer
-//                {
-//
-//                }
-                std::cout << "AFTER MERGE" << std::endl;
-                std::copy(begin1_, end1_, std::ostream_iterator<int>(std::cout, " ")); std::cout << std::endl;
-                std::copy(begin2_, end2_, std::ostream_iterator<int>(std::cout, " ")); std::cout << std::endl;
+                return mergedIterators;
+            }
+            template <typename RandomIt>
+            inline constexpr void relocateValues(RandomIt begin1, RandomIt end1, RandomIt begin2, RandomIt end2, std::vector<RandomIt> mergedIterators)
+            {
+
+                RandomIt begin1_ = begin1;
+                RandomIt end1_ = end1;
+                RandomIt begin2_ = begin2;
+                RandomIt end2_ = end2;
+                auto i = 0u;
+                std::vector<typename std::remove_reference<decltype(*begin1_)>::type> values;
+                for (auto && elemIt: mergedIterators)
+                {
+                    values.emplace_back(std::move(*elemIt));
+                }
+                while (begin1_ != end1_)
+                {
+                    *begin1_ = std::move(values[i]);
+                    begin1_ = std::next(begin1_);
+                    i++;
+                }
+                while (begin2_ != end2_)
+                {
+                    *begin2_ = std::move(values[i]);
+                    begin2_ = std::next(begin2_);
+                    i++;
+                }
             }
         }
         template <typename RandomIt>
         constexpr void mergeSort(RandomIt begin, RandomIt end)
         {
-            std::cout << "MERGE SORT CALLED FOR: ";
-            std::copy(begin, end, std::ostream_iterator<int>(std::cout, " ")); std::cout << std::endl;
             auto distance = std::distance(begin, end);
             if (distance >= 2) {
                 auto middle = distance/2;
                 mergeSort(begin, std::next(begin, middle));
                 mergeSort(std::next(begin, middle), end);
-                detail::merge(begin, std::next(begin, middle), std::next(begin, middle), end);
+                detail::relocateValues(begin, std::next(begin, middle), std::next(begin, middle), end,
+                        detail::merge(begin, std::next(begin, middle), std::next(begin, middle), end));
             }
         }
     }
