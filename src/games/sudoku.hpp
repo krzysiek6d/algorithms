@@ -21,7 +21,8 @@ namespace alg
                 unsigned short row;
             };
 
-            bool findUnassignedLocation(int grid[N][N], int &row, int &col)
+            template <typename T>
+            bool findUnassignedLocation(T grid, int &row, int &col)
             {
                 for (row = 0; row < N; row++)
                     for (col = 0; col < N; col++)
@@ -30,7 +31,8 @@ namespace alg
                 return false;
             }
 
-            bool isValueAlreadyInRow(int grid[N][N], int row, int num)
+            template <typename T>
+            bool isValueAlreadyInRow(T grid, int row, int num)
             {
                 for (int col = 0; col < N; col++)
                     if (grid[row][col] == num)
@@ -38,7 +40,8 @@ namespace alg
                 return false;
             }
 
-            bool isValueAlreadyInCol(int grid[N][N], int col, int num)
+            template <typename T>
+            bool isValueAlreadyInCol(T grid, int col, int num)
             {
                 for (int row = 0; row < N; row++)
                     if (grid[row][col] == num)
@@ -46,7 +49,8 @@ namespace alg
                 return false;
             }
 
-            bool isValueAlreadyInBox(int grid[N][N], int boxStartRow, int boxStartCol, int num)
+            template <typename T>
+            bool isValueAlreadyInBox(T grid, int boxStartRow, int boxStartCol, int num)
             {
                 for (int row = 0; row < 3; row++)
                     for (int col = 0; col < 3; col++)
@@ -55,7 +59,8 @@ namespace alg
                 return false;
             }
 
-            bool isSafeToAssignValue(int grid[N][N], int row, int col, int num)
+            template <typename T>
+            bool isSafeToAssignValue(T grid, int row, int col, int num)
             {
                 return !isValueAlreadyInRow(grid, row, num) &&
                        !isValueAlreadyInCol(grid, col, num) &&
@@ -63,7 +68,8 @@ namespace alg
                        grid[row][col]==UNASSIGNED;
             }
 
-            bool solveSudoku(int grid[N][N])
+            template <typename T>
+            bool solveSudoku(T grid)
             {
                 int row, col;
                 if (!findUnassignedLocation(grid, row, col))
@@ -84,7 +90,8 @@ namespace alg
                 return false;
             }
         }
-        bool solveSudoku(int grid[9][9])
+        template <typename T>
+        bool solveSudoku(T grid)
         {
             return detail::solveSudoku(grid);
         }
