@@ -15,7 +15,7 @@ namespace alg
         namespace recursive {
             bool word_break_problem(const std::string &word, const std::vector<std::string> &dictionary);
         }
-        //bool word_break_problem(const std::string &word, const std::vector<std::string> &dictionary);
+        bool word_break_problem(const std::string &word, const std::vector<std::string> &dictionary);
     }
 }
 

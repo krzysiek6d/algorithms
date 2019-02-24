@@ -37,5 +37,27 @@ namespace alg
                 return word_break_problem(word, dictionary, solution);
             }
         }
+        bool word_break_problem(const std::string &word, const std::vector<std::string> &dictionary) {
+            if (word.empty())
+                return true;
+
+            std::vector<bool> dp(word.length() +1, false);
+            for (auto i=1u; i <= word.length(); i++)
+            {
+                if (dp[i] == false && detail::isInDictionary(word.substr(0, i), dictionary))
+                    dp[i] = true;
+
+                if (dp[i] == true)
+                {
+                    for (auto j = i+1; j <= word.length(); j++)
+                    {
+                        if (dp[j] == false && detail::isInDictionary(word.substr(i, j-i) , dictionary))
+                            dp[j] = true;
+                    }
+                }
+            }
+            return dp[word.length()];
+        }
     }
 }
+
