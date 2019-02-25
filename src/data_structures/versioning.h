@@ -25,17 +25,17 @@ namespace alg
             data.push_back(detail::Element<K,T>{key, element});
         }
 
-        int makeSnapshot()
+        int makeSnapshot() const
         {
             return data.size();
         }
 
-        const T& get(const K& key)
+        const T& get(const K& key) const
         {
             return get(key, data.size());
         }
 
-        const T& get(const K& key, int snapshotId)
+        const T& get(const K& key, int snapshotId) const
         {
             for(int i = snapshotId - 1; i>=0 && snapshotId <= (int)data.size() ; i--)
             {
