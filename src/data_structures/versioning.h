@@ -17,8 +17,9 @@ namespace alg
         };
     }
     template <typename K, typename T>
-    struct VersionedDB
+    class VersionedDB
     {
+    public:
         void add(const K& key, const T& element)
         {
             data.push_back(detail::Element<K,T>{key, element});
@@ -43,6 +44,8 @@ namespace alg
             }
             throw std::runtime_error("cant find element");
         }
+
+    private:
         std::vector<detail::Element<K,T>> data;
     };
 }
