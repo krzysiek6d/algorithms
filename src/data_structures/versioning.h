@@ -35,7 +35,7 @@ namespace alg
             return get(key, data.size());
         }
 
-        const T& get(K key, int snapshotId)
+        const T& get(const K& key, int snapshotId)
         {
             for(int i = snapshotId - 1; i>=0 && snapshotId <= (int)data.size() ; i--)
             {
