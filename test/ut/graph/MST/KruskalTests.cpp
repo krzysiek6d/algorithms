@@ -9,7 +9,7 @@ using namespace ::testing;
 
 
 
-TEST(KruskalTest, asd)
+TEST(KruskalTest, DISABLED_asd)
 {
     alg::graph::mst::kruskal();
     FAIL();

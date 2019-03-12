@@ -1,5 +1,5 @@
 //
-// Created by pawluch on 2/7/19.
+// Created by pawluch on 3/6/19.
 //
 
 #include <gtest/gtest.h>
@@ -36,6 +36,7 @@ struct BetterHash
     }
 };
 
+// hash by template specialization
 namespace std {
     template<>
     struct hash<A> {
@@ -47,42 +48,46 @@ namespace std {
 
 TEST(unordered_map, collisions)
 {
-    numOfEqualOperatorCalls = 0;
+    numOfEqualOperatorCalls = 0; // clear global counter
     std::unordered_map<A, int, BadHash> map;
     map[A(1)] = 0;
     map[A(2)] = 0;
-    map[A(3)] = 0;
+    map[A(3)] = 1;
     map[A(4)] = 0;
     map[A(5)] = 0;
 
-    EXPECT_GE(numOfEqualOperatorCalls, 0); // collisions
-    numOfEqualOperatorCalls = 0;
+    EXPECT_NE(numOfEqualOperatorCalls, 0); // collisions (EXPECT_NE - not equal)
+    numOfEqualOperatorCalls = 0; // clear global counter
 
     auto x = map[A(5)];
 
     EXPECT_EQ(0, x);
     EXPECT_EQ(1, numOfEqualOperatorCalls);
     EXPECT_EQ(5u, map.size());
+    EXPECT_EQ(0, map[A(0)]);
+    EXPECT_EQ(1, map[A(3)]);
 }
 
 TEST(unordered_map, no_collisions)
 {
-    numOfEqualOperatorCalls = 0;
+    numOfEqualOperatorCalls = 0; // clear global counter
     std::unordered_map<A, int, BetterHash> map;
     map[A(1)] = 0;
     map[A(2)] = 0;
-    map[A(3)] = 0;
+    map[A(3)] = 1;
     map[A(4)] = 0;
     map[A(5)] = 0;
 
     EXPECT_EQ(0, numOfEqualOperatorCalls);
-    numOfEqualOperatorCalls = 0;
+    numOfEqualOperatorCalls = 0; // clear global counter
 
     auto x = map[A(5)];
 
     EXPECT_EQ(0, x);
     EXPECT_EQ(1, numOfEqualOperatorCalls);
     EXPECT_EQ(5u, map.size());
+    EXPECT_EQ(0, map[A(0)]);
+    EXPECT_EQ(1, map[A(3)]);
 }
 
 TEST(unordered_map, hash_in_std_compilation_test)
@@ -91,4 +96,13 @@ TEST(unordered_map, hash_in_std_compilation_test)
     map[A(1)] = 0;
     map[A(2)] = 0;
     EXPECT_EQ(2u, map.size());
+}
+
+
+TEST(unordered_map, duplicate)
+{
+    std::unordered_map<A, int> map;
+    map[A(1)] = 0;
+    map[A(1)] = 0;
+    EXPECT_EQ(1u, map.size());
 }
